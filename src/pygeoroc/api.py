@@ -122,7 +122,7 @@ class GEOROC(API):
         if fname.exists():
             return [File(**d) for d in dsv.reader(fname, dicts=True)]
         if not self.path('csv').exists():
-           self.path('csv').mkdir()
+            self.path('csv').mkdir()
         return []
 
     @index.setter

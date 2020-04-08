@@ -49,7 +49,3 @@ def run(args):
                     row.append(len(list(f.iter_references(args.repos))))
                 row.append(f.path(args.repos))
                 t.append(row)
-
-    #print('{:,} files'.format(len(args.repos.index)))
-    #print('{:,} unique samples'.format(len(list(args.repos.iter_samples()))))
-    #print('{:,} unique references'.format(len(list(args.repos.iter_references()))))
