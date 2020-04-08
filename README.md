@@ -1,8 +1,12 @@
 # pygeoroc
 
-Python library to access data in the [GEOROC database](http://georoc.mpch-mainz.gwdg.de/georoc/Start.asp).
+Python library to access data in the [GEOROC database](http://georoc.mpch-mainz.gwdg.de/georoc/Start.asp). Cite GEOROC as
 
 > Sarbas, B., U.Nohl: The GEOROC database as part of a growing geoinformatics network. In: Brady, S.R., Sinha, A.K., and Gundersen, L.C. (editors): Geoinformatics 2008—Data to Knowledge, Proceedings: U.S. Geological Survey Scientific Investigations Report 2008-5172 (2008), pp. 42/43.
+
+and `pygeoroc` as
+
+> Robert Forkel. (2020, April 8). pofatu/pygeoroc: Programmatic access to GEOROC data (Version v0.1.0). Zenodo. http://doi.org/10.5281/zenodo.3744587
 
 
 ## Install
