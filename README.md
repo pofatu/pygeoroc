@@ -1,5 +1,10 @@
 # pygeoroc
 
+[![Build Status](https://travis-ci.org/pofatu/pygeoroc.svg?branch=master)](https://travis-ci.org/pofatu/pygeoroc)
+[![codecov](https://codecov.io/gh/pofatu/pygeoroc/branch/master/graph/badge.svg)](https://codecov.io/gh/pofatu/pygeoroc)
+[![PyPI](https://img.shields.io/pypi/v/pygeoroc.svg)](https://pypi.org/project/pygeoroc)
+
+
 Python library to access data in the [GEOROC database](http://georoc.mpch-mainz.gwdg.de/georoc/Start.asp). Cite GEOROC as
 
 > Sarbas, B., U.Nohl: The GEOROC database as part of a growing geoinformatics network. In: Brady, S.R., Sinha, A.K., and Gundersen, L.C. (editors): Geoinformatics 2008—Data to Knowledge, Proceedings: U.S. Geological Survey Scientific Investigations Report 2008-5172 (2008), pp. 42/43.
