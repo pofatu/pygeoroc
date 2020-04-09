@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pygeoroc',
-    version='0.1.1.dev0',
+    version='0.2.0',
     license='Apache 2.0',
     description='programmatic access to GEOROC data',
     long_description=open('README.md').read(),
