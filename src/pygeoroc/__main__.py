@@ -20,7 +20,7 @@ def main(args=None, catch_all=False, parsed_args=None, log=None):
 
     args = parsed_args or parser.parse_args(args=args)
 
-    if not hasattr(args, "main"):
+    if not hasattr(args, "main"):  # pragma: no cover
         parser.print_help()
         return 1
 

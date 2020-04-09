@@ -4,7 +4,7 @@ import contextlib
 import collections
 
 from tqdm import tqdm
-from pygeoroc.api import COL_MAP, EXCLUDE
+from pygeoroc.api import EXCLUDE, col_type
 
 
 class Database:
@@ -18,7 +18,7 @@ class Database:
                 for sample in f.iter_samples(api):
                     for key in sample.data:
                         if key:
-                            cols[key] = 'REAL' if key in COL_MAP.values() else 'TEXT'
+                            cols[key] = 'REAL' if col_type(key) is float else 'TEXT'
                     break
         cols = collections.OrderedDict(sorted(
             cols.items(),
@@ -46,6 +46,7 @@ CREATE TABLE sample (
 CREATE TABLE citation (
     sample_id TEXT,
     reference_id INTEGER,
+    fields TEXT,
     FOREIGN KEY (sample_id) REFERENCES sample(id),
     FOREIGN KEY (reference_id) REFERENCES reference(id)
 );
@@ -70,11 +71,13 @@ CREATE TABLE citation (
                         samples.add(sample.id)
                         tuples.append(
                             tuple([sample.id, f.name] + [sample.data.get(c) for c in cols]))
-                        citations.extend([(sample.id, cit) for cit in sample.citations])
+                        citations.extend(
+                            [(sample.id, cit, ' '.join(fields))
+                             for cit, fields in sample.citations.items()])
                 sql = "INSERT INTO sample ({}) VALUES ({})".format(
                     ', '.join(['id', 'file_id'] + ['`{}`'.format(c) for c in cols]),
                     ', '.join(['?' for _ in range(len(cols) + 2)]))
                 cu.executemany(sql, tuples)
                 cu.executemany(
-                    "INSERT INTO citation (sample_id, reference_id) VALUES (?, ?)",
+                    "INSERT INTO citation (sample_id, reference_id, fields) VALUES (?, ?, ?)",
                     citations)

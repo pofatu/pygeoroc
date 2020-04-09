@@ -1,6 +1,9 @@
 import re
+import sqlite3
 import datetime
 import itertools
+import contextlib
+import collections
 
 from clldutils.apilib import API
 from csvw import dsv
@@ -9,45 +12,69 @@ import attr
 # We exclude files in redundant sections of the precompilations when iterating over samples:
 EXCLUDE = ['Minerals', 'Rocks', 'Inclusions']
 COL_MAP = {
-    'ELEVATION (MAX.)': 'ELEVATION MAX',
-    'ELEVATION (MIN.)': 'ELEVATION MIN',
-    'LATITUDE (MAX.)': 'LATITUDE MAX',
-    'LATITUDE (MIN.)': 'LATITUDE MIN',
-    'LONGITUDE (MAX.)': 'LONGITUDE MAX',
-    'LONGITUDE (MIN.)': 'LONGITUDE MIN',
+    'ELEVATION_(MAX.)': 'ELEVATION_MAX',
+    'ELEVATION_(MIN.)': 'ELEVATION_MIN',
+    'LATITUDE_(MAX.)': 'LATITUDE_MAX',
+    'LATITUDE_(MIN.)': 'LATITUDE_MIN',
+    'LONGITUDE_(MAX.)': 'LONGITUDE_MAX',
+    'LONGITUDE_(MIN.)': 'LONGITUDE_MIN',
 }
+CITATION_PATTERN = re.compile('\[(?P<ref>[0-9]+)\]')
 
 
-def normalized(row):
-    for k, v in COL_MAP.items():
-        if k in row:
-            row[v] = row.pop(k)
-        if v in row:
-            row[v] = float(row[v]) if row[v] else None
-    return {k.replace(' ', '_'): v for k, v in row.items()}
+def col_type(s):
+    if s in [
+        'MIN._AGE_(YRS.)',  # '3480000000  / 3484000000'
+        'MAX._AGE_(YRS.)',  # '3480000000  / 3484000000'
+    ]:
+        return str
+    if s in COL_MAP.values():
+        return float
+    if '(' in s:
+        return float
+    if '_' in s and re.search('[0-9]', s):
+        return float
+    return str
 
 
-def citation_converter(s):
-    res = []
-    for ss in s.split('['):
-        ss = ss.strip()
-        if ss:
-            assert ss.endswith(']')
-            res.append(ss[:-1].strip())
-    return res
+def value_and_refs(v):
+    refs = set()
+
+    def repl(m):
+        refs.add(m.group('ref'))
+        return ''
+
+    return CITATION_PATTERN.sub(repl, v).strip(), refs
+
+
+def citations_converter(s):
+    v, res = value_and_refs(s)
+    assert not v
+    return collections.OrderedDict([(k, []) for k in res])
 
 
 @attr.s
 class Sample:
     id = attr.ib()
     name = attr.ib()
-    citations = attr.ib(converter=citation_converter)
+    citations = attr.ib(converter=citations_converter)
     data = attr.ib()
+
+    def __attrs_post_init__(self):
+        for k, v in COL_MAP.items():
+            if k in self.data:
+                self.data[v] = self.data.pop(k)
+
+        for k in self.data:
+            v, refs = value_and_refs(self.data[k])
+            for ref in refs:
+                assert ref in self.citations
+                self.citations[ref].append(k)
+            self.data[k] = col_type(k)(v) if v else None
 
     @classmethod
     def from_row(cls, row):
-        row = normalized(row)
-        assert re.match('[0-9\[\]]+$', row['CITATIONS'])
+        row = {k.replace(' ', '_'): v for k, v in row.items()}
         return cls(
             id=row.pop('UNIQUE_ID'),
             name=row.pop('SAMPLE_NAME'),
@@ -115,6 +142,14 @@ class GEOROC(API):
     @property
     def dbpath(self):
         return self.path('georoc.sqlite')
+
+    def dbquery(self, sql, params=None):
+        with sqlite3.connect(str(self.dbpath)) as conn:
+            with contextlib.closing(conn.cursor()) as cu:
+                cu.execute(sql, params or ())
+                cols = [r[0] for r in cu.description]
+                res = [collections.OrderedDict(zip(cols, row)) for row in cu.fetchall()]
+        return res
 
     @property
     def index(self):

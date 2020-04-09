@@ -6,6 +6,8 @@ import itertools
 from clldutils.clilib import Table, add_format
 from clldutils.misc import format_size
 
+from pygeoroc.api import EXCLUDE
+
 
 def register(parser):
     parser.add_argument('--sections-only', default=False, action='store_true')
@@ -44,7 +46,10 @@ def run(args):
                     f.date.isoformat()
                 ]
                 if args.samples:
-                    row.append(len(list(f.iter_samples(args.repos))))
+                    if f.section in EXCLUDE:  # pragma: no cover
+                        row.append(0)
+                    else:
+                        row.append(len(list(f.iter_samples(args.repos))))
                 if args.references:
                     row.append(len(list(f.iter_references(args.repos))))
                 row.append(f.path(args.repos))

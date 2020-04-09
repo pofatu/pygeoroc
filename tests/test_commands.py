@@ -1,4 +1,5 @@
 import logging
+import sqlite3
 
 import pytest
 
@@ -49,9 +50,14 @@ def test_download(_main, mocker, caplog):
     assert len(caplog.records) == 1
 
 
-def test_createdb(_main, api):
+def test_createdb(_main, api, tmpdir):
     _main('createdb')
     assert api.dbpath.exists()
+    res = api.dbquery('SELECT LATITUDE_MIN FROM sample WHERE LATITUDE_MIN < -19')
+    assert len(res) == 376
+    assert all(r['LATITUDE_MIN'] < -19 for r in res)
+    _main('createdb')
+    _main('createdb', '--force', '--archive', str(tmpdir))
 
 
 def test_ls(_main, capsys):
