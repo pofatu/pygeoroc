@@ -1,6 +1,6 @@
 # pygeoroc
 
-[![Build Status](https://travis-ci.org/pofatu/pygeoroc.svg?branch=master)](https://travis-ci.org/pofatu/pygeoroc)
+[![Build Status](https://github.com/pofatu/pygeoroc/workflows/tests/badge.svg)](https://github.com/pofatu/pygeoroc/actions?query=workflow%3Atests)
 [![codecov](https://codecov.io/gh/pofatu/pygeoroc/branch/master/graph/badge.svg)](https://codecov.io/gh/pofatu/pygeoroc)
 [![PyPI](https://img.shields.io/pypi/v/pygeoroc.svg)](https://pypi.org/project/pygeoroc)
 
