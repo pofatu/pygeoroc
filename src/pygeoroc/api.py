@@ -19,7 +19,7 @@ COL_MAP = {
     'LONGITUDE_(MAX.)': 'LONGITUDE_MAX',
     'LONGITUDE_(MIN.)': 'LONGITUDE_MIN',
 }
-CITATION_PATTERN = re.compile('\[(?P<ref>[0-9]+)\]')
+CITATION_PATTERN = re.compile(r'\[(?P<ref>[0-9]+)]')
 
 
 def col_type(s):
@@ -32,7 +32,7 @@ def col_type(s):
         return float
     if '(' in s:
         return float
-    if '_' in s and re.search('[0-9]', s):
+    if '_' in s and re.search(r'[0-9]', s):
         return float
     return str
 
@@ -130,7 +130,7 @@ class File:
                     line = line[1:].strip()
                 if line.endswith('"'):
                     line = line[:-1].strip()
-                m = re.match('\[(?P<id>[0-9]+)\]\s+(?P<ref>.+)', line)
+                m = re.match(r'\[(?P<id>[0-9]+)]\s+(?P<ref>.+)', line)
                 if m:
                     yield int(m.group('id')), m.group('ref')
 

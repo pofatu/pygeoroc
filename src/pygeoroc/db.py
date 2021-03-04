@@ -31,10 +31,10 @@ class Database:
                 self._load_data(cu, cols, api)
 
     def _create_schema(self, cu, cols):
-            cu.execute("CREATE TABLE file (id TEXT PRIMARY KEY, date TEXT, section TEXT);")
-            cu.execute("CREATE TABLE reference (id INTEGER PRIMARY KEY, reference TEXT);")
-            colspec = ['`{}` {}'.format(k, v) for k, v in cols.items()]
-            cu.execute("""
+        cu.execute("CREATE TABLE file (id TEXT PRIMARY KEY, date TEXT, section TEXT);")
+        cu.execute("CREATE TABLE reference (id INTEGER PRIMARY KEY, reference TEXT);")
+        colspec = ['`{}` {}'.format(k, v) for k, v in cols.items()]
+        cu.execute("""
 CREATE TABLE sample (
     id TEXT PRIMARY KEY,
     file_id TEXT,
@@ -42,7 +42,7 @@ CREATE TABLE sample (
     FOREIGN KEY (file_id) REFERENCES file(id)
 );
 """.format(',\n'.join(colspec)))
-            cu.execute("""
+        cu.execute("""
 CREATE TABLE citation (
     sample_id TEXT,
     reference_id INTEGER,
