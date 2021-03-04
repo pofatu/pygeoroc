@@ -156,9 +156,9 @@ class GEOROC(API):
         fname = self.path('index.csv')
         if fname.exists():
             return [File(**d) for d in dsv.reader(fname, dicts=True)]
-        if not self.path('csv').exists():
+        if not self.path('csv').exists():  # pragma: no cover
             self.path('csv').mkdir()
-        return []
+        return []  # pragma: no cover
 
     @index.setter
     def index(self, items):
@@ -176,7 +176,7 @@ class GEOROC(API):
                         yield id_, ref
                         refs[id_] = ref
                     else:
-                        assert refs[id_] == ref
+                        assert refs[id_] == ref  # pragma: no cover
 
     def iter_samples(self):
         sids = set()
