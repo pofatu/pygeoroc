@@ -44,6 +44,7 @@ def value_and_refs(v):
         refs.add(m.group('ref'))
         return ''
 
+    print(v)
     return CITATION_PATTERN.sub(repl, v).strip(), refs
 
 
@@ -116,11 +117,14 @@ class File:
                 yield line.strip()
 
     def iter_samples(self, repos):
+        from pygeoroc import errata
         lines = itertools.takewhile(
             lambda l: not (l.startswith('Abbreviations') or l.startswith('References:')),
             self.iter_lines(repos))
         for row in dsv.reader(lines, dicts=True):
-            yield Sample.from_row(row)
+            sample = Sample.from_row(row)
+            errata.fix(sample, self)
+            yield sample
 
     def iter_references(self, repos):
         in_refs = False

@@ -13,7 +13,7 @@ def _main(repos):
     return f
 
 
-def test_download(_main, mocker, caplog):
+def test_download(_main, mocker, caplog, repos):
     caplog.set_level(logging.INFO)
     downloads = """
 <html>
@@ -40,14 +40,21 @@ def test_download(_main, mocker, caplog):
 
     mocker.patch('pygeoroc.commands.download.requests', requests())
     _main('download')
-    assert not caplog.records
+    assert caplog.records
 
     mocker.patch(
         'pygeoroc.commands.download.requests', requests(downloads.replace('3/9/2020', '3/10/2020')))
     mocker.patch(
         'pygeoroc.commands.download.urlretrieve', mocker.Mock())
     _main('download')
-    assert len(caplog.records) == 1
+    assert len(caplog.records) == 2
+
+    repos.joinpath('csv', 'obsolete.csv').write_text('abc', encoding='utf8')
+    _main('download')
+    assert 'obsolete CSV files' in caplog.records[-1].msg
+    _main('download', '--autoremove')
+    assert 'obsolete' in caplog.records[-1].msg
+    assert not repos.joinpath('csv', 'obsolete.csv').exists()
 
 
 def test_createdb(_main, api, tmpdir):
@@ -66,3 +73,9 @@ def test_ls(_main, capsys):
     assert 'Cratons' in out
 
     _main('ls', '--sections-only')
+
+
+def test_check(_main, capsys):
+    _main('check')
+    _, err = capsys.readouterr()
+    assert not err

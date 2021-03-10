@@ -11,7 +11,7 @@ Python library to access data in the [GEOROC database](http://georoc.mpch-mainz.
 
 and `pygeoroc` as
 
-> Robert Forkel. (2020, April 9). pofatu/pygeoroc: Programmatic access to GEOROC data. Zenodo. http://doi.org/10.5281/zenodo.3744586
+> Robert Forkel. (2021). pofatu/pygeoroc: Programmatic access to GEOROC data. Zenodo. http://doi.org/10.5281/zenodo.3744586
 
 
 ## Install
