@@ -1,11 +1,13 @@
 import re
 import sqlite3
+import argparse
 import datetime
 import itertools
 import contextlib
 import collections
 
 from clldutils.apilib import API
+from clldutils.misc import lazyproperty
 from csvw import dsv
 import attr
 
@@ -44,7 +46,6 @@ def value_and_refs(v):
         refs.add(m.group('ref'))
         return ''
 
-    print(v)
     return CITATION_PATTERN.sub(repl, v).strip(), refs
 
 
@@ -116,14 +117,18 @@ class File:
             if line.strip():
                 yield line.strip()
 
-    def iter_samples(self, repos):
+    def iter_samples(self, repos, stdout=False):
         from pygeoroc import errata
         lines = itertools.takewhile(
             lambda l: not (l.startswith('Abbreviations') or l.startswith('References:')),
             self.iter_lines(repos))
-        for row in dsv.reader(lines, dicts=True):
-            sample = Sample.from_row(row)
-            errata.fix(sample, self)
+        for i, row in enumerate(dsv.reader(lines, dicts=True), start=2):
+            try:
+                sample = Sample.from_row(row)
+            except:  # pragma: no cover # noqa: E722
+                print('{}:{}'.format(self.name, i))
+                raise
+            errata.fix(sample, self, repos, stdout=stdout)
             yield sample
 
     def iter_references(self, repos):
@@ -143,6 +148,18 @@ class File:
 
 
 class GEOROC(API):
+    @lazyproperty
+    def converters(self):
+        import importlib.util
+
+        mod = self.path('converters.py')
+        if mod.exists():
+            spec = importlib.util.spec_from_file_location("pygeoroc.converters", mod)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            return mod
+        return argparse.Namespace(COORDINATES={}, FIELDS={})  # pragma: no cover
+
     @property
     def dbpath(self):
         return self.path('georoc.sqlite')
