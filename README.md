@@ -328,3 +328,52 @@ KELLEY KATHERINE A., PLANK T. A., LUDDEN J. N., STAUDIGEL H.:    COMPOSITION OF 
 Sample(id='138180', name='s_27-261-33,CC,PC. 2 [2118]', citations=['2118'], data={'SR(PPM)': '', ... })
 File(name='Ocean_Basin_Flood_Basalts_comp__ARGO_ABYSSAL_PLAIN;INDIAN_OCEAN.csv', date=datetime.date(2020, 3, 9), section='Ocean Basin Flood Basalts')
 ```
+
+
+### Converters
+
+For both access modes - SQLite and the python API - `pygeoroc` provides a
+mechanism to specify "converters", i.e. python callables to convert the values
+for specific columns in GEOROC CSV data. This mechanism can be used to fix
+errata - e.g. missing negative signs in geographic coordinates - or cast data
+to more suitable datatypes.
+
+This mechanism is implemented in [`pygeoroc.errata`](src/pygeoroc/errata.py)
+and works as follows: If the data repository contains a python module called
+`converters.py`, this module is loaded and two python `dict`s are looked up
+by name:
+- `FIELDS`: `dict` mapping CSV column names to converter functions.
+- `COORDINATES`: `dict` mapping CSV filenames (as stored in the repository)
+  to `dict`s specifying converter functions for keys `latitude` and `longitude`.
+  
+A "converter function" is a python callable with the following signature:
+```python
+def conv(old, data, fname):
+    """
+    @param old: old value for the respective field in the sample data
+    @param data: full `dict` of the sample data in one row in the GEOROC CSV
+    @param fname: name of the GEOROC CSV file containing the row
+    @return: the new value for "field" in "data"
+    """
+```
+
+Some useful converter functions are available as attributes of 
+[`pygeoroc.errata.CONVERTERS`](src/pygeoroc/errata.py).
+
+So, to specify that values for the column `LAND_OR_SEA` must be all uppercase,
+and latitudes in the file `Convergent_Margins_comp__BISMARCK_ARC_-_NEW_BRITAIN_ARC.csv`
+must be negative, you would put the following python code in your repository's
+`converters.py`:
+```python
+from pygeoroc.errata import CONVERTERS
+
+FIELDS = {
+    'LAND_OR_SEA': CONVERTERS.upper,
+}
+
+COORDINATES = {
+    "Convergent_Margins_comp__BISMARCK_ARC_-_NEW_BRITAIN_ARC.csv": {
+        'latitude': CONVERTERS.negative,
+    },
+}
+```
