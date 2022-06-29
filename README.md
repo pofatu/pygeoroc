@@ -5,7 +5,7 @@
 [![PyPI](https://img.shields.io/pypi/v/pygeoroc.svg)](https://pypi.org/project/pygeoroc)
 
 
-Python library to access data in the [GEOROC data](https://georoc.eu/georoc/new-start.asp) as archived at
+Python library to access [GEOROC data](https://georoc.eu/georoc/new-start.asp) as archived at
 https://data.goettingen-research-online.de/dataverse/digis.
 
 Cite GEOROC data as specified 
@@ -40,11 +40,15 @@ GEOROC provides its downloadable content in precompiled files organized in datas
 - access the data in the repository programmatically from Python code,
 - load the data from the repository into a SQLite database for scalable and
   performant analysis.
- 
+
 
 ### Downloading GEOROC data
 
-Downloading GEOROC data will create or update a local repository, i.e. a directory with the following layout:
+Running
+```shell
+$ georoc --repos tmp download
+```
+will create or update a local repository, i.e. a directory with the following layout:
 ```shell
 $ tree -L 1 .
 .
@@ -282,8 +286,7 @@ CREATE TABLE citation (
 Thus, information similar to what is reported by `georoc ls` can be obtained by
 running SQL queries.
 
-E.g. to determine the paper which contributed the highest number of samples in the
-"Ocean Basin Flood Basalts" section, we can run
+E.g. to determine the paper which contributed the highest number of samples, we can run
 ```sql
 SELECT
     r.reference, COUNT(c.sample_id) AS c
@@ -297,7 +300,7 @@ LIMIT 1;
 ```
 which yields
 ```
-KELLEY KATHERINE A., PLANK T. A., LUDDEN J. N., STAUDIGEL H.:    COMPOSITION OF ALTERED OCEANIC CRUST AT ODP SITES 801 AND 1149  GEOCHEMISTRY GEOPHYSICS GEOSYSTEMS 4   [2003]    GeoReM-id: 305   doi: 10.1029/2002GC000435|123
+FONTIJN K., MCNAMARA K., TADESSE A. Z., PYLE D. M., DESSALEGN F., HUTCHISON W., MATHER T. A., YIRGU G.:    CONTRASTING STYLES OF POST-CALDERA VOLCANISM ALONG THE MAIN ETHIOPIAN RIFT: IMPLICATIONS FOR CONTEMPORARY VOLCANIC HAZARDS  J. VOLCANOL. GEOTHERM. RES. 356   [2018] 90-113    doi: 10.1016/j.jvolgeores.2018.02.001|3978
 ```
 
 
@@ -349,8 +352,9 @@ Some useful converter functions are available as attributes of
 [`pygeoroc.errata.CONVERTERS`](src/pygeoroc/errata.py).
 
 So, to specify that values for the column `LAND_OR_SEA` must be all uppercase,
-and latitudes in the file `Convergent_Margins_comp__BISMARCK_ARC_-_NEW_BRITAIN_ARC.csv`
-must be negative, you would put the following python code in your repository's
+and latitudes in the file `BISMARCK_ARC_NEW_BRITAIN_ARC.csv` must be negative 
+(look up filenames in your repository's `csv/` directory or by running `SELECT id FROM file;` in the SQLite db),
+you would put the following python code in your repository's
 `converters.py`:
 ```python
 from pygeoroc.errata import CONVERTERS
@@ -360,7 +364,7 @@ FIELDS = {
 }
 
 COORDINATES = {
-    "Convergent_Margins_comp__BISMARCK_ARC_-_NEW_BRITAIN_ARC.csv": {
+    "BISMARCK_ARC_NEW_BRITAIN_ARC.csv": {
         'latitude': CONVERTERS.negative,
     },
 }
