@@ -44,14 +44,17 @@ def test_download(_main, caplog, repos, tmp_path):
         assert len(caplog.records) == 22
 
 
-def test_createdb(_main, api, tmpdir):
+def test_createdb(_main, api, tmpdir, capsys):
     _main('createdb')
     assert api.dbpath.exists()
     res = api.dbquery('SELECT LATITUDE_MIN FROM sample WHERE LATITUDE_MIN < -19')
     assert len(res) == 376
     assert all(r['LATITUDE_MIN'] < -19 for r in res)
     _main('createdb')
-    _main('createdb', '--force', '--archive', str(tmpdir))
+    _main('createdb', '--dump-schema', '--force', '--archive', str(tmpdir))
+    out, _ = capsys.readouterr()
+    assert 'CREATE TABLE' in out
+    _main('stats')
 
 
 def test_ls(_main, capsys):

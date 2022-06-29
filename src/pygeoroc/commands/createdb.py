@@ -3,6 +3,7 @@ Load GEOROC data into a SQLite database
 """
 import gzip
 import shutil
+import subprocess
 
 from clldutils.clilib import PathType
 
@@ -11,6 +12,7 @@ from pygeoroc.db import Database
 
 def register(parser):
     parser.add_argument('-f', '--force', default=False, action='store_true')
+    parser.add_argument('--dump-schema', default=False, action='store_true')
     parser.add_argument('--archive', type=PathType(type='dir'))
 
 
@@ -23,6 +25,8 @@ def run(args):
             return
     db = Database(args.repos.dbpath)
     db.create(args.repos)
+    if args.dump_schema:
+        print(subprocess.check_output(['sqlite3', str(args.repos.dbpath), '.schema']))
     if args.archive:
         with args.repos.dbpath.open('rb') as f_in:
             with gzip.open(
