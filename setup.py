@@ -17,8 +17,8 @@ setup(
         "Programming Language :: Python :: 3.10",
     ],
     author='Robert Forkel',
-    author_email='forkel@shh.mpg.de',
-    url='',
+    author_email='robert_forkel@eva.mpg.de',
+    url='https://github.com/pofatu/pygeoroc',
     keywords='data',
     packages=find_packages(where='src'),
     package_dir={'': 'src'},
@@ -49,4 +49,3 @@ setup(
         ]
     },
 )
-
