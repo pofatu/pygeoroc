@@ -1,6 +1,6 @@
 from pygeoroc.api import GEOROC  # noqa: F401
 
-__version__ = '2.0.0'
+__version__ = '2.0.1.dev0'
 DATASETS = {
     "doi:10.25625/JUQK7N": "GEOROC Compilation: Seamounts",
     "doi:10.25625/JRZIJF": "GEOROC Compilation: Oceanic Plateaus",
