@@ -41,6 +41,8 @@ def fix(sample, f, api, stdout=False):
             msg = 'fixing {} in {}: {} -> {}'.format(field, f.name, sample.data[field], new)
             if stdout:
                 print(msg)  # pragma: no cover
+            elif stdout is None:  # pragma: no cover
+                pass
             else:
                 log().info(msg)
             sample.data[field] = new

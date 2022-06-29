@@ -5,7 +5,7 @@ FIELDS = {
 }
 
 COORDINATES = {
-    'Convergent_Margins_comp__NEW_CALEDONIA.csv': {
+    'NEW_CALEDONIA.csv': {
         'latitude': CONVERTERS.negative,
         'longitude': CONVERTERS.positive,
     }

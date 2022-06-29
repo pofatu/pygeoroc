@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='pygeoroc',
-    version='1.0.2.dev0',
+    version='2.0.0.dev0',
     license='Apache 2.0',
     description='programmatic access to GEOROC data',
     long_description=open('README.md').read(),
@@ -11,10 +11,10 @@ setup(
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     author='Robert Forkel',
     author_email='forkel@shh.mpg.de',
@@ -25,13 +25,12 @@ setup(
     include_package_data=True,
     zip_safe=False,
     platforms='any',
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     install_requires=[
         'attrs>=19.3',
         'clldutils>=3.5',
         'csvw',
         'requests',
-        'bs4',
         'tqdm',
     ],
     extras_require={
@@ -39,6 +38,7 @@ setup(
         'test': [
             'pytest>=4.3',
             'pytest-mock',
+            'requests-mock',
             'pytest-cov',
             'coverage>=4.2',
         ],

@@ -5,13 +5,14 @@
 [![PyPI](https://img.shields.io/pypi/v/pygeoroc.svg)](https://pypi.org/project/pygeoroc)
 
 
-Python library to access data in the [GEOROC database](http://georoc.mpch-mainz.gwdg.de/georoc/Start.asp). Cite GEOROC as
+Python library to access data in the [GEOROC data](https://georoc.eu/georoc/new-start.asp) as archived at
+https://data.goettingen-research-online.de/dataverse/digis.
 
-> Sarbas, B., U.Nohl: The GEOROC database as part of a growing geoinformatics network. In: Brady, S.R., Sinha, A.K., and Gundersen, L.C. (editors): Geoinformatics 2008—Data to Knowledge, Proceedings: U.S. Geological Survey Scientific Investigations Report 2008-5172 (2008), pp. 42/43.
-
+Cite GEOROC data as specified 
+[for each pre-compiled dataset](https://data.goettingen-research-online.de/dataverse/digis?q=&types=datasets&sort=dateSort&order=desc&page=1)
 and `pygeoroc` as
 
-> Robert Forkel. (2021). pofatu/pygeoroc: Programmatic access to GEOROC data. Zenodo. http://doi.org/10.5281/zenodo.3744586
+> Robert Forkel. (2022). pofatu/pygeoroc: Programmatic access to GEOROC data. Zenodo. http://doi.org/10.5281/zenodo.3744586
 
 
 ## Install
@@ -32,8 +33,7 @@ for details on usage.
 
 ## Overview
 
-GEOROC provides its [downloadable content](http://georoc.mpch-mainz.gwdg.de/georoc/CompFiles.aspx) in precompiled files organized in sections which correspond
-mostly to locations.
+GEOROC provides its downloadable content in precompiled files organized in datasets.
 
 `pygeoroc` provides functionality to
 - download this data to a local directory, called *repository*,
@@ -44,29 +44,16 @@ mostly to locations.
 
 ### Downloading GEOROC data
 
-Downloading GEOROC data will create or update a local repository. Since the volume
-of data provided per section differs greatly, downloading can be limited to individual
-sections. E.g. running
-```shell script
-georoc --repos tmp/ download --section "Ocean Basin Flood Basalts"
-```
-will result in the following repository
-```shell script
-tree tmp/
-tmp/
+Downloading GEOROC data will create or update a local repository, i.e. a directory with the following layout:
+```shell
+$ tree -L 1 .
+.
 ├── csv
-│   ├── Ocean_Basin_Flood_Basalts_comp__ARGO_ABYSSAL_PLAIN;INDIAN_OCEAN.csv
-│   ├── Ocean_Basin_Flood_Basalts_comp__EAST_MARIANA_BASIN.csv
-│   ├── Ocean_Basin_Flood_Basalts_comp__NAURU_BASIN.csv
-│   ├── Ocean_Basin_Flood_Basalts_comp__PIGAFETTA_BASIN.csv
-│   └── Ocean_Basin_Flood_Basalts_comp__WHARTON_BASIN.csv
-└── index.csv
-
-1 directory, 6 files
+└── datasets.json
 ```
 
-Note that the repository also contains a "table of contents" in `index.csv`. The timestamp recorded per file in this table is checked against the "Last Actualization"
-column on the web page to determine whether a file needs to be refreshed when `georoc download` is run again.
+The repository contains a "table of contents" in `datasets.json`. The checksum recorded per file in this table is checked
+when running `georoc download` again, making sure only new versions of files are fetched.
 
 The local repository can be inspected running `georoc ls`, e.g.
 ```shell script
@@ -74,13 +61,14 @@ $ georoc --repos tmp/ ls --samples --references --format pipe
 ```
 will output the table included below
 
-| file | section | size | last modified | # samples | # references | path |
-|:--------------------------------|:--------------------------|:--------|:----------------|------------:|---------------:|:----------------------------------------------------------------------------|
-| ARGO_ABYSSAL_PLAIN;INDIAN_OCEAN | Ocean Basin Flood Basalts | 34.5KB | 2020-03-09 | 38 | 6 | tmp/csv/Ocean_Basin_Flood_Basalts_comp__ARGO_ABYSSAL_PLAIN;INDIAN_OCEAN.csv |
-| EAST_MARIANA_BASIN | Ocean Basin Flood Basalts | 86.7KB | 2020-03-09 | 93 | 11 | tmp/csv/Ocean_Basin_Flood_Basalts_comp__EAST_MARIANA_BASIN.csv |
-| NAURU_BASIN | Ocean Basin Flood Basalts | 273.9KB | 2020-03-09 | 356 | 18 | tmp/csv/Ocean_Basin_Flood_Basalts_comp__NAURU_BASIN.csv |
-| PIGAFETTA_BASIN | Ocean Basin Flood Basalts | 349.0KB | 2020-03-09 | 428 | 18 | tmp/csv/Ocean_Basin_Flood_Basalts_comp__PIGAFETTA_BASIN.csv |
-| WHARTON_BASIN | Ocean Basin Flood Basalts | 75.7KB | 2020-03-09 | 94 | 8 | tmp/csv/Ocean_Basin_Flood_Basalts_comp__WHARTON_BASIN.csv |
+| file | dataset | size | last modified | # samples | # references | path |
+|:---------------------------------------------------------------------|:----------------------------------------------|:---------|:----------------|------------:|---------------:|:------------------------------------------------------------------------------------------|
+| [doi:10.25625/1KRR1P/QIINIE](https://doi.org/10.25625/1KRR1P/QIINIE) | GEOROC Compilation: Archaean Cratons | 211.7KB | 2022-06-20 | 242 | 8 | 2022-06-1KRR1P_ALDAN_SHIELD_ARCHEAN.csv |
+| [doi:10.25625/1KRR1P/9YG7VJ](https://doi.org/10.25625/1KRR1P/9YG7VJ) | GEOROC Compilation: Archaean Cratons | 494.3KB | 2022-06-20 | 564 | 23 | 2022-06-1KRR1P_AMAZONIAN_CRATON.csv |
+| [doi:10.25625/1KRR1P/E7NI47](https://doi.org/10.25625/1KRR1P/E7NI47) | GEOROC Compilation: Archaean Cratons | 3.3MB | 2022-06-20 | 3776 | 66 | 2022-06-1KRR1P_BALTIC_SHIELD_ARCHEAN.csv |
+| [doi:10.25625/1KRR1P/FY7PXY](https://doi.org/10.25625/1KRR1P/FY7PXY) | GEOROC Compilation: Archaean Cratons | 53.8KB | 2022-06-20 | 61 | 5 | 2022-06-1KRR1P_BASTAR_CRATON_ARCHEAN.csv |
+
+...
 
 
 ### Loading GEOROC data into SQLite

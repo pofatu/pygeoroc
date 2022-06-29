@@ -4,7 +4,7 @@ import contextlib
 import collections
 
 from tqdm import tqdm
-from pygeoroc.api import EXCLUDE, col_type
+from pygeoroc.api import col_type
 
 
 class Database:
@@ -13,14 +13,13 @@ class Database:
 
     def create(self, api):
         cols, files = {}, []
-        for f in api.index:
-            if f.section not in EXCLUDE:
-                files.append(f)
-                for sample in f.iter_samples(api):
-                    for key in sample.data:
-                        if key:
-                            cols[key] = 'REAL' if col_type(key) is float else 'TEXT'
-                    break
+        for f in api.iter_files():
+            files.append(f)
+            for sample in f.iter_samples(api):
+                for key in sample.data:
+                    if key:
+                        cols[key] = 'REAL' if col_type(key) is float else 'TEXT'
+                break
         cols = collections.OrderedDict(sorted(
             cols.items(),
             key=lambda s: ('(' in s[0], bool(re.search('[0-9]', s[0])), s[0])))
@@ -30,26 +29,6 @@ class Database:
             with contextlib.closing(conn.cursor()) as cu:
                 self._create_schema(cu, cols)
                 self._load_data(cu, cols, api, files)
-
-        index, section = ['# Content\n\n'], None
-        index.extend([
-            "`georoc.sqlite.gz` contains data from [GEOROC's precompiled datasets]"
-            "(http://georoc.mpch-mainz.gwdg.de/georoc/CompFiles.aspx) "
-            "as listed below.",
-            "To avoid redundancy, files from the sections {} have been excluded.\n".format(
-                ', '.join(['"{}"'.format(s) for s in EXCLUDE])),
-            "Upon loading the data into SQLite, a couple of apparent errors have been corrected.",
-            "These corrections are listed in [errata.log](errata.log)."
-        ])
-        for f in files:
-            if section != f.section:
-                index.append('\n## {}\n'.format(f.section))
-                index.append('| File | Size (KB) | Last Actualization |\n| --- | ---:| --- |')
-                section = f.section
-            index.append('| {} | {} | {} |'.format(
-                f.name, round(f.size(api) / 1024), f.date.isoformat()))
-
-        api.path('INDEX.md').write_text('\n'.join(index), encoding='utf8')
 
     def _create_schema(self, cu, cols):
         cu.execute("CREATE TABLE file (id TEXT PRIMARY KEY, date TEXT, section TEXT);")
@@ -78,7 +57,7 @@ CREATE TABLE citation (
         for f in tqdm(files):
             cu.execute(
                 "INSERT INTO file (id, date, section) VALUES (?,?,?)",
-                (f.name, f.date.isoformat(), f.section))
+                (f.name, f.date, f.section))
             for id_, ref in f.iter_references(api):
                 if id_ not in refs:
                     cu.execute(

@@ -1,7 +1,6 @@
 """
 
 """
-from pygeoroc.api import EXCLUDE
 
 
 def register(parser):
@@ -9,8 +8,7 @@ def register(parser):
 
 
 def run(args):
-    for f in args.repos.index:
-        if f.section not in EXCLUDE:
-            if (args.pattern is None) or args.pattern in f.name:
-                for _ in f.iter_samples(args.repos, stdout=True):
-                    pass
+    for f in args.repos.iter_files():
+        if (args.pattern is None) or args.pattern in f.name:
+            for _ in f.iter_samples(args.repos, stdout=True):
+                pass

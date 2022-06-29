@@ -1,0 +1,164 @@
+[
+    {
+        "id": 34647,
+        "identifier": "1KRR1P",
+        "persistentUrl": "https://doi.org/10.25625/1KRR1P",
+        "protocol": "doi",
+        "authority": "10.25625",
+        "publisher": "GRO.data",
+        "publicationDate": "2021-12-08",
+        "storageIdentifier": "file://10.25625/1KRR1P",
+        "metadataLanguage": "undefined",
+        "latestVersion": {
+            "id": 3171,
+            "datasetId": 34647,
+            "datasetPersistentId": "doi:10.25625/1KRR1P",
+            "storageIdentifier": "file://10.25625/1KRR1P",
+            "versionNumber": 3,
+            "versionMinorNumber": 0,
+            "versionState": "RELEASED",
+            "productionDate": "2022-06-01",
+            "lastUpdateTime": "2022-06-21T08:04:15Z",
+            "releaseTime": "2022-06-21T08:04:15Z",
+            "createTime": "2022-06-20T11:33:20Z",
+            "termsOfUse": "License: <a href=\"https://creativecommons.org/licenses/by/4.0/\">Creative Commons Attribution 4.0 International (CC BY 4.0)</a> <img src=\"https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by.png\" height=26pt style=\"vertical-align:middle;\">",
+            "fileAccessRequest": false,
+            "metadataBlocks": {
+                "citation": {
+                    "displayName": "Citation Metadata",
+                    "name": "citation",
+                    "fields": [
+                        {
+                            "typeName": "title",
+                            "multiple": false,
+                            "typeClass": "primitive",
+                            "value": "GEOROC Compilation: Archaean Cratons"
+                        },
+                        {
+                            "typeName": "author",
+                            "multiple": true,
+                            "typeClass": "compound",
+                            "value": [
+                                {
+                                    "authorName": {
+                                        "typeName": "authorName",
+                                        "multiple": false,
+                                        "typeClass": "primitive",
+                                        "value": "DIGIS Team"
+                                    },
+                                    "authorAffiliation": {
+                                        "typeName": "authorAffiliation",
+                                        "multiple": false,
+                                        "typeClass": "primitive",
+                                        "value": "G\u00f6ttingen University, G\u00f6ttingen, Germany"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "typeName": "datasetContact",
+                            "multiple": true,
+                            "typeClass": "compound",
+                            "value": [
+                                {
+                                    "datasetContactName": {
+                                        "typeName": "datasetContactName",
+                                        "multiple": false,
+                                        "typeClass": "primitive",
+                                        "value": "DIGIS Team"
+                                    },
+                                    "datasetContactEmail": {
+                                        "typeName": "datasetContactEmail",
+                                        "multiple": false,
+                                        "typeClass": "primitive",
+                                        "value": "grodigis@uni-goettingen.de"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "typeName": "dsDescription",
+                            "multiple": true,
+                            "typeClass": "compound",
+                            "value": [
+                                {
+                                    "dsDescriptionValue": {
+                                        "typeName": "dsDescriptionValue",
+                                        "multiple": false,
+                                        "typeClass": "primitive",
+                                        "value": "Compilation of geochemical and isotopic rock compositions from Archaean cratons held in the GEOROC database. Results are grouped by craton. Files were generated from the GEOROC database on 01/06/2022."
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "typeName": "subject",
+                            "multiple": true,
+                            "typeClass": "controlledVocabulary",
+                            "value": [
+                                "Earth and Environmental Sciences"
+                            ]
+                        },
+                        {
+                            "typeName": "productionDate",
+                            "multiple": false,
+                            "typeClass": "primitive",
+                            "value": "2022-06-01"
+                        },
+                        {
+                            "typeName": "grantNumber",
+                            "multiple": true,
+                            "typeClass": "compound",
+                            "value": [
+                                {
+                                    "grantNumberAgency": {
+                                        "typeName": "grantNumberAgency",
+                                        "multiple": false,
+                                        "typeClass": "primitive",
+                                        "value": "Deutsche Forschungsgemeinschaft (DFG)"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "typeName": "depositor",
+                            "multiple": false,
+                            "typeClass": "primitive",
+                            "value": "UGIG, digis"
+                        },
+                        {
+                            "typeName": "dateOfDeposit",
+                            "multiple": false,
+                            "typeClass": "primitive",
+                            "value": "2022-06-20"
+                        }
+                    ]
+                }
+            },
+            "files": [
+                {
+                    "label": "2022-06-1KRR1P_ZIMBABWE_CRATON_ARCHEAN.csv",
+                    "restricted": false,
+                    "version": 1,
+                    "datasetVersionId": 3171,
+                    "dataFile": {
+                        "id": 47086,
+                        "persistentId": "doi:10.25625/1KRR1P/KHXKUP",
+                        "pidURL": "https://doi.org/10.25625/1KRR1P/KHXKUP",
+                        "filename": "2022-06-1KRR1P_ZIMBABWE_CRATON_ARCHEAN.csv",
+                        "contentType": "text/csv",
+                        "filesize": 412607,
+                        "storageIdentifier": "file://18180e3f56b-de8696e05ee5",
+                        "rootDataFileId": -1,
+                        "md5": "1f15c19d65fcd8b841329ad1f32737e9",
+                        "checksum": {
+                            "type": "MD5",
+                            "value": "1f15c19d65fcd8b841329ad1f32737e9"
+                        },
+                        "creationDate": "2022-06-20"
+                    }
+                }
+            ]
+        }
+    }
+]
