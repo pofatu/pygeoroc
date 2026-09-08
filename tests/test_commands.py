@@ -65,6 +65,12 @@ def test_ls(_main, capsys):
     _main('ls', '--datasets-only')
 
 
+def test_zenodo(_main, capsys):
+    _main('zenodo')
+    out, _ = capsys.readouterr()
+    assert '{' in out
+
+
 def test_check(_main, capsys):
     _main('check')
     _, err = capsys.readouterr()

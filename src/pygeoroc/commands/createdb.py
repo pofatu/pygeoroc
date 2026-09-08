@@ -7,7 +7,7 @@ import subprocess
 
 from clldutils.clilib import PathType
 
-from pygeoroc.db import Database
+from pygeoroc.db import create
 
 
 def register(parser):
@@ -21,15 +21,14 @@ def run(args):
         if args.force:
             args.repos.dbpath.unlink()
         else:
-            print('DB exists at {}. Use --force to recreate.'.format(args.repos.dbpath))
+            print(f'DB exists at {args.repos.dbpath}. Use --force to recreate.')
             return
-    db = Database(args.repos.dbpath)
-    db.create(args.repos)
+    create(args.repos)
     if args.dump_schema:
         print(subprocess.check_output(['sqlite3', str(args.repos.dbpath), '.schema']))
     if args.archive:
         with args.repos.dbpath.open('rb') as f_in:
             with gzip.open(
-                    str(args.archive / '{}.gz'.format(args.repos.dbpath.name)), 'wb') as f_out:
+                    str(args.archive / f'{args.repos.dbpath.name}.gz'), 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
     args.log.info(args.repos.dbpath)

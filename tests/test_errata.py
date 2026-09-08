@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-from pygeoroc.api import Sample
+from pygeoroc.models import Sample
 from pygeoroc.errata import fix
 
 
