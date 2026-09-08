@@ -8,7 +8,7 @@ import collections
 from typing import TYPE_CHECKING
 
 from tqdm import tqdm
-from pygeoroc.models import Sample
+from pygeoroc.models import Sample, File
 
 if TYPE_CHECKING:
     from .api import GEOROC
@@ -38,7 +38,12 @@ def create(api: 'GEOROC'):
 
 def _create_schema(cu: sqlite3.Cursor, cols: dict[str, str]):
     def create_table(name, *clauses):
-        cu.execute(f"CREATE TABLE {name} ({', '.join(clauses)})")
+        assert clauses
+        sql_lines = [f"CREATE TABLE {name} ("]
+        sql_lines.extend([f"    {clause}," for clause in clauses[:-1]])
+        sql_lines.append(f"    {clauses[-1]}")
+        sql_lines.append(')')
+        cu.execute('\n'.join(sql_lines))
 
     create_table("file", "id TEXT PRIMARY KEY", "date TEXT", "section TEXT")
     create_table("reference", "id INTEGER PRIMARY KEY", "reference TEXT")
@@ -55,7 +60,7 @@ def _create_schema(cu: sqlite3.Cursor, cols: dict[str, str]):
         "FOREIGN KEY (reference_id) REFERENCES reference(id)")
 
 
-def _load_data(cu: sqlite3.Cursor, cols: dict[str, str], api, files):
+def _load_data(cu: sqlite3.Cursor, cols: dict[str, str], api: 'GEOROC', files: list[File]):
     def insert(table, cols, rows):
         cols = [f'`{c}`' for c in cols]
         sql = f"INSERT INTO {table} ({', '.join(cols)}) VALUES ({','.join('?' for _ in cols)})"

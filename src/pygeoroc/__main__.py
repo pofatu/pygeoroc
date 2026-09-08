@@ -1,3 +1,6 @@
+"""
+CLI for pygeoroc
+"""
 import sys
 import pathlib
 import contextlib
@@ -9,7 +12,7 @@ import pygeoroc.commands
 from pygeoroc import GEOROC
 
 
-def main(args=None, catch_all=False, parsed_args=None, log=None):
+def main(args=None, catch_all=False, parsed_args=None, log=None):  # pylint: disable=C0116
     parser, subparsers = get_parser_and_subparsers('georoc')
     parser.add_argument(
         '--repos',

@@ -35,6 +35,7 @@ class GEOROC(API):
         return argparse.Namespace(COORDINATES={}, FIELDS={})  # pragma: no cover
 
     def fix(self, sample, f, stdout=False):
+        """Apply conversions to a sample."""
         fix(sample, f, self, stdout=stdout)
 
     @property

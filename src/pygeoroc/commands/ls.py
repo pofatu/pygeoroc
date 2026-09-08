@@ -1,11 +1,13 @@
 """
 List the contents of the local GEOROC repository
 """
+import argparse
+
 from clldutils.clilib import Table, add_format
 from clldutils.misc import format_size
 
 
-def register(parser):
+def register(parser: argparse.ArgumentParser):  # pylint: disable=C0116
     add_format(parser, 'simple')
     parser.add_argument('--index', default=False, action='store_true')
     parser.add_argument('--citations', default=False, action='store_true')
@@ -15,10 +17,10 @@ def register(parser):
     parser.add_argument('--references', default=False, action='store_true')
 
 
-def run(args):
+def run(args: argparse.Namespace):  # pylint: disable=C0116
     if args.citations:  # pragma: no cover
         for dataset in args.repos.index:
-            print('> {}\n'.format(dataset.citation))
+            print(f'> {dataset.citation}' + '\n')
         return
 
     if args.datasets_only:
@@ -31,10 +33,8 @@ def run(args):
                     dataset.name,
                     len(dataset.files),
                     format_size(sum(f.size for f in dataset.files))])
-            t.append([
-                'total: {} datasets'.format(len(args.repos.index)),
-                totalfiles,
-                format_size(totalsize)])
+            t.append(
+                [f'total: {len(args.repos.index)} datasets', totalfiles, format_size(totalsize)])
         return
 
     if args.index:  # pragma: no cover
@@ -53,17 +53,13 @@ as listed below.
             t.columns.append('# references')
         t.columns.append('path')
         for ds in args.repos.index:
-            if not args.dataset or (args.dataset in ds.name):
-                for f in ds.files:
-                    row = [
-                        '[{}]({})'.format(f.id, f.md['pidURL']),
-                        ds.name,
-                        format_size(f.size),
-                        f.date
-                    ]
-                    if args.samples:
-                        row.append(len(list(f.iter_samples(args.repos, stdout=None))))
-                    if args.references:
-                        row.append(len(list(f.iter_references(args.repos))))
-                    row.append(f.name)
-                    t.append(row)
+            if args.dataset and (args.dataset not in ds.name):
+                continue  # pragma: no cover
+            for f in ds.files:
+                row = [f"[{f.id}]({f.md['pidURL']})", ds.name, format_size(f.size), f.date]
+                if args.samples:
+                    row.append(len(list(f.iter_samples(args.repos, stdout=None))))
+                if args.references:
+                    row.append(len(list(f.iter_references(args.repos))))
+                row.append(f.name)
+                t.append(row)

@@ -4,7 +4,7 @@ This module provides code to fix errata/known problems with the GEOROC data.
 import math
 import logging
 import argparse
-from typing import Protocol, Callable, Any, Literal, Union, TYPE_CHECKING, Optional, get_args
+from typing import Protocol, Callable, Any, Literal, Union, TYPE_CHECKING, Optional
 
 from pygeoroc.models import File, Sample
 
@@ -49,7 +49,7 @@ CONVERTERS = argparse.Namespace(
 
 def fix(sample: Sample, f: File, api: 'GEOROC', stdout: Optional[bool] = False):
     """
-    :return: The `dict` with corrected data.
+    Fix the data of a sample.
     """
     def _fix(field, converter):
         new = converter(sample.data[field], sample.data, f.name)
@@ -69,7 +69,6 @@ def fix(sample: Sample, f: File, api: 'GEOROC', stdout: Optional[bool] = False):
 
     if f.name in api.converters.COORDINATES:
         for k in sample.data:
-            prefix: LatLonType = k.split('_')[0].lower()
-            assert prefix in get_args(LatLonType)
+            prefix = k.split('_')[0].lower()
             if prefix in api.converters.COORDINATES[f.name] and sample.data[k]:
                 _fix(k, api.converters.COORDINATES[f.name][prefix])

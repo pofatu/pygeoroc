@@ -132,7 +132,7 @@ class File:
     md: JsonObjectType
     section: Optional[str]
     name: str
-    date: str  # FIXME: datetime.date?
+    date: str
     md5: str
     size: int
     id: str
@@ -168,7 +168,7 @@ class File:
     def iter_samples(self, repos: 'GEOROC', stdout=False) -> Generator['Sample', None, None]:
         """Yield samples."""
         lines = itertools.takewhile(
-            lambda l: not (l.startswith('Abbreviations') or l.startswith('References:')),
+            lambda ln: not (ln.startswith('Abbreviations') or ln.startswith('References:')),
             self.iter_lines(repos))
         for i, row in enumerate(dsv.reader(lines, dicts=True), start=2):
             try:
